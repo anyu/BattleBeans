@@ -22,8 +22,7 @@ $(function() {
 	}
 
 	//character 2: X & Y position, width, height
-	var bean2X = (Math.floor(Math.random()*301) + 380)/5; //generates an X position that is between 401 and 680 (b/c 700 is end of screen)
-    var bean2X = (Math.round(bean2X))*5;
+	var bean2X = (Math.floor(Math.random()*301) + 380)/5; 
     //alert(bean2x);
 	var bean2Y = 300;
 	var bean2Height = 20;
