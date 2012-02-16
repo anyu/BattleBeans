@@ -54,11 +54,21 @@ var bullet = {
 
 // Reset game
 var reset = function () {
-	bean1.x = (Math.floor(Math.random()*201) + 480)/2;
+	bean1.x = (Math.floor(Math.random()*601))/2;
 	bean1.y = 350;
-	bean2.x = 750;
+    bean2.x = 700;
 	bean2.y = 350;
 };
+
+// Initial bean2 movement
+var initial_bean2 = (Math.floor(Math.random()*2));
+
+if(initial_bean2 == 1){
+    var bean2_right = true;
+}
+if(initial_bean2 == 0){
+    var bean2_left = false;
+}
 
 /********************************* Handle Keyboard Inputs ******************************/
 var keysDown = {};
@@ -88,8 +98,24 @@ var update = function (e) {
 		bean2.x += bean2.speed * e;
 	}
 
+    //stop bean from going past midpoint 
 	bean1.x = bean1.x.stopPoint(0, (canvas.width/2) - 100);
 	bean2.x = bean2.x.stopPoint((canvas.width/2), canvas.width - 100)
+
+	//smooth randomizing movement of bean2 
+	var random = (Math.floor(Math.random()*100)); //Generates random between 0 - 99
+	//flip the direction 2% of the time
+	if(random >= 99){ 
+	    bean2_right = !bean2_right;
+	}
+
+	if(bean2_right){
+        bean2.x += 2;
+	}
+	else{
+		bean2.x -= 2;
+	} 
+
 };
 
 // Stop beans from going off canvas or past middle
