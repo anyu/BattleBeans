@@ -5,6 +5,8 @@ canvas.width = 900;
 canvas.height = 450;
 document.body.appendChild(canvas);
 
+/********************************* Object Images ******************************/
+
 // Background image
 var bgReady = false;
 var bgImage = new Image();
@@ -29,20 +31,24 @@ bean2Image.onload = function () {
 };
 bean2Image.src = "images/bean2.png";
 
-/* Bullet image
+// Bullet image -- not implemented yet
 var bulletReady = false;
 var bulletImage = new Image();
 bulletImage.onload = function () {
 	bulletReady = true;
 };
 bulletImage.src = "images/bullet.png";
-*/
 
-// Game objects
+
+/********************************* Object Attributes ******************************/
 var bean1 = {
 	speed: 256 // movement in pixels per second
 };
 var bean2 = {
+	speed: 256 // movement in pixels per second
+};
+
+var bullet = {
 	speed: 256 // movement in pixels per second
 };
 
@@ -54,7 +60,7 @@ var reset = function () {
 	bean2.y = 350;
 };
 
-// Handle keyboard controls
+/********************************* Handle Keyboard Inputs ******************************/
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
@@ -82,9 +88,16 @@ var update = function (e) {
 		bean2.x += bean2.speed * e;
 	}
 
+	bean1.x = bean1.x.stopPoint(0, (canvas.width/2) - 100);
+	bean2.x = bean2.x.stopPoint((canvas.width/2), canvas.width - 100)
 };
 
-// Draw everything
+// Stop beans from going off canvas or past middle
+Number.prototype.stopPoint = function(min, max) {
+  return Math.min(Math.max(this, min), max);
+};
+
+/********************************* Draw Everything ******************************/
 var render = function () {
 	if (bgReady) {
 		contex.drawImage(bgImage, 0, 0);
@@ -105,7 +118,7 @@ var render = function () {
 
 };
 
-// Main game loop
+/********************************* Main Game Loop ******************************/
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
