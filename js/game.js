@@ -34,9 +34,9 @@ bean2Image.src = "images/bean2.png";
 // Bullet image
 var bulletReady = false;
 var bulletImage = new Image();
-bulletImage.onload = function () {
-    bulletReady = true;
-};
+//bulletImage.onload = function () {
+//    bulletReady = true;
+//};
 bulletImage.src = "images/bullet.png";
 
 
@@ -63,11 +63,14 @@ var reset = function () {
     bean1.y = 350;
     bean2.x = 700;
     bean2.y = 350;
+    bullet.x = bean1.x;
+    bullet.y = 350;
 };
 
 // Initial bean2 movement
 var initial_bean2 = (Math.floor(Math.random()*2));
 var counter = 0; //used to determine number of times the loop has completed
+var shot_length = 0;
 
 if(initial_bean2 == 1){
     var bean2_right = true;
@@ -78,7 +81,10 @@ if(initial_bean2 == 0){
 
 /********************************* Handle Keyboard Inputs ******************************/
 var keysDown = {};
+var keysUp = {};
+var spacebar_pressed = false;
 
+//arguments: the event type, the function to be executed, and useCapture boolean 
 addEventListener("keydown", function (e) {
     keysDown[e.keyCode] = true;
 }, false);
@@ -87,33 +93,58 @@ addEventListener("keyup", function (e) {
     delete keysDown[e.keyCode];
 }, false);
 
+addEventListener("keyup", function (e) {
+    keysUp[e.keyCode] = true;
+}, false);
+
+addEventListener("keydown", function (e) {
+    delete keysUp[e.keyCode];
+}, false);
 
 // Keyboard Input
 var update = function (e) {
 
+    bulletReady = false;
+
     if (65 in keysDown) { // Player1 holding A
         bean1.x -= bean1.speed * e;
+        bullet.x = bean1.x;
+        spacebar_pressed = false;
     }
+
     if (68 in keysDown) { // Player1 holding D
         bean1.x += bean1.speed * e;
+        bullet.x = bean1.x;
+        spacebar_pressed = false;
     }
     
-    //********************************************
-    //This didn't work - am going to come back to it later
-    //********************************************    
-    //    //For shooting
-    //    if (32 in keysDown) { // Player1 holding Spacebar
-    //        //draw bullet
-    //        if (bulletReady)  {
-    //            context.drawImage(bulletImage, bean1.x, bean1.y);
-    //        }     
-    //    }
-    //*********************************************
-    
-    
-    
+    if (32 in keysDown) { // Player1 holding Spacebar
+        shot_length += 5;
+        spacebar_pressed = true;
+    }
 
+    /************************************
+      Problems: 1) bullet stops if spacebar is pressed again while bullet is in flight
+                --need to prevent anything from happening while bullet is still moving 
     
+    ************************************/
+    
+    if(32 in keysUp) {       
+        if(spacebar_pressed) {        
+            bulletReady = true;       
+            if (bullet.x >= shot_length){
+                bullet.x = bean1.x;  
+                shot_length = 0;    
+                bulletReady = false;
+                spacebar = false;          
+            }     
+        }
+   } 
+
+   if (bulletReady){
+        bullet.x += 3;
+    }    
+      
     // *********************************************
     //     Saving this for possibility of two player game    
     //    if (37 in keysDown) { // Player2 holding left
@@ -170,7 +201,7 @@ var render = function () {
     }
     
     if (bulletReady)  {
-        context.drawImage(bulletImage, bean1.x + 40, bean1.y);
+        context.drawImage(bulletImage, bullet.x, bullet.y);
     }
     
 //***********************************  
