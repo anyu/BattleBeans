@@ -83,6 +83,7 @@ if(initial_bean2 == 0){
 var keysDown = {};
 var keysUp = {};
 var spacebar_pressed = false;
+var bulletReleased = false;
 
 //arguments: the event type, the function to be executed, and useCapture boolean 
 addEventListener("keydown", function (e) {
@@ -105,41 +106,46 @@ addEventListener("keydown", function (e) {
 var update = function (e) {
 
     bulletReady = false;
+    if (bulletReleased == false) {
+        if (65 in keysDown) { // Player1 holding A
+            bean1.x -= bean1.speed * e;
+            bullet.x = bean1.x;
+            spacebar_pressed = false;
+            bulletReleased = false;
+        }
 
-    if (65 in keysDown) { // Player1 holding A
-        bean1.x -= bean1.speed * e;
-        bullet.x = bean1.x;
-        spacebar_pressed = false;
-    }
+        if (68 in keysDown) { // Player1 holding D
+            bean1.x += bean1.speed * e;
+            bullet.x = bean1.x;
+            spacebar_pressed = false;        
+            bulletReleased = false;
 
-    if (68 in keysDown) { // Player1 holding D
-        bean1.x += bean1.speed * e;
-        bullet.x = bean1.x;
-        spacebar_pressed = false;
+        }
+        
+        if (32 in keysDown) { // Player1 holding Spacebar
+            shot_length += 5;
+            spacebar_pressed = true;        
+            bulletReleased = false;
+        }
     }
-    
-    if (32 in keysDown) { // Player1 holding Spacebar
-        shot_length += 5;
-        spacebar_pressed = true;
-    }
-
-    /************************************
-      Problems: 1) bullet stops if spacebar is pressed again while bullet is in flight
-                --need to prevent anything from happening while bullet is still moving 
-    
-    ************************************/
     
     if(32 in keysUp) {       
-        if(spacebar_pressed) {        
+        if(spacebar_pressed) { 
+            bulletReleased = true;       
             bulletReady = true;       
-            if (bullet.x >= shot_length){
+            if ((bullet.x >= shot_length) || (bullet.x >= bean2.x)) { //if bullet goes over shotlength or if bullet hits bean2
                 bullet.x = bean1.x;  
                 shot_length = 0;    
                 bulletReady = false;
-                spacebar = false;          
+                spacebar_pressed = false;      
+                bulletReleased = false;    
             }     
         }
    } 
+
+   if(bulletReleased) {
+       bulletReady = true;
+   }
 
    if (bulletReady){
         bullet.x += 3;
@@ -195,7 +201,7 @@ var render = function () {
     if (bean1Ready) {
         context.drawImage(bean1Image, bean1.x, bean1.y);
     }
-	
+
     if (bean2Ready) {
         context.drawImage(bean2Image, bean2.x, bean2.y);
     }
