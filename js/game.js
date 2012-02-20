@@ -34,11 +34,13 @@ bean2Image.src = "images/bean2.png";
 // Bullet image
 var bulletReady = false;
 var bulletImage = new Image();
-//bulletImage.onload = function () {
-//    bulletReady = true;
-//};
 bulletImage.src = "images/bullet.png";
 
+
+// Crosshair image
+var crosshairReady = false;
+var crosshairImage = new Image();
+crosshairImage.src = "images/crosshair.png";
 
 /********************************* Object Attributes ******************************/
 var bean1 = {
@@ -50,6 +52,10 @@ var bean2 = {
 
 var bullet = {
     speed: 256 // movement in pixels per second
+};
+
+var crosshair = {
+    speed: 20 // movement in pixels per second
 };
 
 //create the aiming arc
@@ -65,12 +71,13 @@ var reset = function () {
     bean2.y = 350;
     bullet.x = bean1.x;
     bullet.y = 350;
+    crosshair.x = bean1.x;
+    crosshair.y = 350;
 };
 
 // Initial bean2 movement
 var initial_bean2 = (Math.floor(Math.random()*2));
 var counter = 0; //used to determine number of times the loop has completed
-var shot_length = 0;
 
 if(initial_bean2 == 1){
     var bean2_right = true;
@@ -80,91 +87,105 @@ if(initial_bean2 == 0){
 }
 
 /********************************* Handle Keyboard Inputs ******************************/
-var keysDown = {};
-var keysUp = {};
-var spacebar_pressed = false;
-var bulletReleased = false;
+var left = false;
+var right = false;
+var fire = false;
+var power = false;
+var shot = false;
+var shot_length = bean1.x;
 
-//arguments: the event type, the function to be executed, and useCapture boolean 
-addEventListener("keydown", function (e) {
-    keysDown[e.keyCode] = true;
-}, false);
+document.onkeydown = onKeyDown;  
+document.onkeyup   = onKeyUp;  
 
-addEventListener("keyup", function (e) {
-    delete keysDown[e.keyCode];
-}, false);
+function onKeyDown(e) {  
+    if(!e){
+        var e = window.event;
+    }  
+  
+    switch(e.keyCode) {  
+        // left  
+        case 65:
+            left = true;
+            right = false;  
+            break;  
+        // right  
+        case 68:
+            right = true;
+            left = false;  
+            break; 
+        // Space Bar for power
+        case 32:
+            if(fire != true){ //Idea: can't press space again while bullet in flight
+                power = true;
+                crosshair.x = bean1.x;
+                crosshairReady = true;
+            }
+            break; 
+            
+    }  
+}  
 
-addEventListener("keyup", function (e) {
-    keysUp[e.keyCode] = true;
-}, false);
+function onKeyUp(e) {  
+    if(!e){
+        var e = window.event;
+    }  
+  
+    switch(e.keyCode) {  
+        // left  
+        case 65:
+            left = false;  
+            break;   
+        // right  
+        case 68:
+            right = false;  
+            break;   
+        // Space bar for firing  
+        case 32:
+            if(fire != true){
+                power = false;
+                bullet.x = bean1.x;
+                crosshair.Ready = false;
+                fire = true;
+                break; 
+            }
+    }  
+}  
 
-addEventListener("keydown", function (e) {
-    delete keysUp[e.keyCode];
-}, false);
+function shoot() { 
+    bulletReady = true;
+    bullet.x += 2;
+    if ((bullet.x >= bean2.x) || (bullet.x >= shot_length)){
+        bullet.x = bean1.x;
+        bulletReady = false;
+        crosshairReady = false;
+        fire = false;
+        shot_length = bean1.x;
+    }
+}  
 
-// Keyboard Input
-var update = function (e) {
 
-    bulletReady = false;
-    if (bulletReleased == false) {
-        if (65 in keysDown) { // Player1 holding A
-            bean1.x -= bean1.speed * e;
-            bullet.x = bean1.x;
-            spacebar_pressed = false;
-            bulletReleased = false;
-        }
+/*--------------Start Update ------------------*/
 
-        if (68 in keysDown) { // Player1 holding D
-            bean1.x += bean1.speed * e;
-            bullet.x = bean1.x;
-            spacebar_pressed = false;        
-            bulletReleased = false;
-
-        }
-        
-        if (32 in keysDown) { // Player1 holding Spacebar
-            shot_length += 5;
-            spacebar_pressed = true;        
-            bulletReleased = false;
-        }
+var update = function(e){   
+    if(left){
+        bean1.x -= bean1.speed * e;
+    }
+    if(right){
+        bean1.x += bean1.speed * e;
+    }
+    if(power){
+        shot_length +=2;
+        crosshair.x = shot_length;
     }
     
-    if(32 in keysUp) {       
-        if(spacebar_pressed) { 
-            bulletReleased = true;       
-            bulletReady = true;       
-            if ((bullet.x >= shot_length) || (bullet.x >= bean2.x)) { //if bullet goes over shotlength or if bullet hits bean2
-                bullet.x = bean1.x;  
-                shot_length = 0;    
-                bulletReady = false;
-                spacebar_pressed = false;      
-                bulletReleased = false;    
-            }     
-        }
-   } 
-
-   if(bulletReleased) {
-       bulletReady = true;
-   }
-
-   if (bulletReady){
-        bullet.x += 3;
-    }    
-      
-    // *********************************************
-    //     Saving this for possibility of two player game    
-    //    if (37 in keysDown) { // Player2 holding left
-    //        bean2.x -= bean2.speed * e;
-    //    }
-    //    if (39 in keysDown) { // Player2 holding right
-    //        bean2.x += bean2.speed * e;
-    //    }
-    //***********************************************
+    if(fire){
+        shoot();
+    }
 
     //stop bean from going past midpoint 
     bean1.x = bean1.x.stopPoint(0, (canvas.width/2) - 50);
     bean2.x = bean2.x.stopPoint((canvas.width/2)+50, canvas.width - 55);
-       
+
     //loop only allows direction change after a 100 frames
     counter ++;
     var random_frame = (Math.floor(Math.random()*50))+50 //generates random btwn 50-100
@@ -192,6 +213,7 @@ Number.prototype.stopPoint = function(min, max) {
     return Math.min(Math.max(this, min), max);
 };
 
+
 /********************************* Draw Everything ******************************/
 var render = function () {
     if (bgReady) {
@@ -208,6 +230,10 @@ var render = function () {
     
     if (bulletReady)  {
         context.drawImage(bulletImage, bullet.x, bullet.y);
+    }
+
+    if (crosshairReady)  {
+        context.drawImage(crosshairImage, crosshair.x, crosshair.y);
     }
     
 //***********************************  
