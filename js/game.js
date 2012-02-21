@@ -36,7 +36,6 @@ var bulletReady = false;
 var bulletImage = new Image();
 bulletImage.src = "images/bullet.png";
 
-
 // Crosshair image
 var crosshairReady = false;
 var crosshairImage = new Image();
@@ -47,19 +46,14 @@ var bean1 = {
     speed: 256 // movement in pixels per second
 };
 var bean2 = {
-    speed: 256 // movement in pixels per second
+    speed: 256 
 };
 
-var bullet = {
-    speed: 256 // movement in pixels per second
-};
-
-var crosshair = {
-    speed: 20 // movement in pixels per second
-};
+var bullet = {};
+var crosshair = {};
 
 //create the aiming arc
-var aim_arc = function (){
+var aim_arc = function () {
     
 }
 
@@ -79,10 +73,10 @@ var reset = function () {
 var initial_bean2 = (Math.floor(Math.random()*2));
 var counter = 0; //used to determine number of times the loop has completed
 
-if(initial_bean2 == 1){
+if(initial_bean2 == 1) {
     var bean2_right = true;
 }
-if(initial_bean2 == 0){
+if(initial_bean2 == 0) {
     var bean2_left = false;
 }
 
@@ -91,18 +85,18 @@ var left = false;
 var right = false;
 var fire = false;
 var power = false;
-var shot = false;
+
 var shot_length = bean1.x;
+var index = 0;     //used to track if spacebar is pressed once or held down
 
 document.onkeydown = onKeyDown;  
 document.onkeyup   = onKeyUp;  
 
 function onKeyDown(e) {  
-    if(!e){
+    if(!e) {
         var e = window.event;
     }  
-  
-    switch(e.keyCode) {  
+    switch(e.keyCode) { 
         // left  
         case 65:
             left = true;
@@ -113,23 +107,20 @@ function onKeyDown(e) {
             right = true;
             left = false;  
             break; 
-        // Space Bar for power
+        // spacebar for power
         case 32:
-            if(fire != true){ //Idea: can't press space again while bullet in flight
+            if(fire != true) {     // can't press space again while bullet in flight
                 power = true;
-                crosshair.x = bean1.x;
-                crosshairReady = true;
+                index++;
             }
             break; 
-            
     }  
 }  
 
 function onKeyUp(e) {  
-    if(!e){
+    if(!e) {
         var e = window.event;
     }  
-  
     switch(e.keyCode) {  
         // left  
         case 65:
@@ -139,13 +130,13 @@ function onKeyUp(e) {
         case 68:
             right = false;  
             break;   
-        // Space bar for firing  
+        // spacebar for firing  
         case 32:
-            if(fire != true){
+            if(fire != true) {
                 power = false;
-                bullet.x = bean1.x;
-                crosshair.Ready = false;
                 fire = true;
+                bullet.x = bean1.x;
+                index = 0;
                 break; 
             }
     }  
@@ -153,18 +144,28 @@ function onKeyUp(e) {
 
 function shoot() { 
     bulletReady = true;
-    bullet.x += 2;
-    if ((bullet.x >= bean2.x) || (bullet.x >= shot_length)){
-        bullet.x = bean1.x;
+    bullet.x += 3;
+
+    if (bullet.x >= bean2.x) {   // if bullet hits bean 2
+        fire = false;
+        bean2Ready = false;
         bulletReady = false;
         crosshairReady = false;
-        fire = false;
-        shot_length = bean1.x;
+
+        bullet.x = bean1.x;
+        gameOver();
     }
-}  
 
+    if (bullet.x >= shot_length) {   // if bullet goes past shot length
+        fire = false;
+        bulletReady = false;
+        crosshairReady = false;
 
-/*--------------Start Update ------------------*/
+        bullet.x = bean1.x;
+    }
+}
+
+/************************************ Start update **************************/
 
 var update = function(e){   
     if(left){
@@ -173,9 +174,14 @@ var update = function(e){
     if(right){
         bean1.x += bean1.speed * e;
     }
-    if(power){
-        shot_length +=2;
-        crosshair.x = shot_length;
+    if(power){             
+        if(index == 1) {            // when spacebar is pressed only once, reset crosshair+shot_length to bean1 position 
+            shot_length = bean1.x;
+            crosshair.x = bean1.x;        
+        }             
+        crosshairReady = true;   
+        shot_length += 3;            
+        crosshair.x += 3;
     }
     
     if(fire){
@@ -184,19 +190,18 @@ var update = function(e){
 
     //stop bean from going past midpoint 
     bean1.x = bean1.x.stopPoint(0, (canvas.width/2) - 50);
-    bean2.x = bean2.x.stopPoint((canvas.width/2)+50, canvas.width - 55);
+    bean2.x = bean2.x.stopPoint((canvas.width/2) + 50, canvas.width - 55);
 
     //loop only allows direction change after a 100 frames
     counter ++;
-    var random_frame = (Math.floor(Math.random()*50))+50 //generates random btwn 50-100
+    var random_frame = (Math.floor(Math.random() * 50)) + 50 //generates random btwn 50-100
     if(counter > random_frame){
-        var random = (Math.floor(Math.random()*100)); //Generates random between 0 - 99
+        var random = (Math.floor(Math.random() * 100)); //Generates random between 0 - 99
         //flip the direction 2% of the time
         if(random >= 98){ 
-            bean2_right = !bean2_right;
+            bean2_right =! bean2_right;
             counter = 0; //reset counter after successful direction change
         }
-
     }
     
     if(bean2_right){
@@ -205,7 +210,6 @@ var update = function(e){
     else{
         bean2.x -= bean2.speed * e;
     } 
-
 };
 
 // Stop beans from going off canvas or past middle
@@ -248,7 +252,6 @@ var render = function () {
 //************************************
 
 
-
 };
 
 /********************************* Main Game Loop ******************************/
@@ -262,7 +265,12 @@ var main = function () {
     then = now;
 };
 
+var gameOver = function() {
+    reset();  
+}
+
 // Start game!
 reset();
 var then = Date.now();
 setInterval(main, 1); // Execute as fast as possible
+
