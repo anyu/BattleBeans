@@ -34,7 +34,6 @@ var bulletImage = new Image();
 bulletImage.src = "images/bullet.png";
 
 var powerBar = false;
-var arcPoint = false;
 
 /********************************* Define Game Objects ******************************/
 function Bean(x){
@@ -73,10 +72,11 @@ function Bullet(x){
 }
 
 function PowerBar(){
-    this.x = 0;
+    this.x = 15;
     this.y = 430;
-    this.height = 15;
-    this.width = 0;
+    this.height = 0;
+    this.width = 15;
+    this.length = 0;
     this.color = '#00FF00';
 }
 
@@ -138,17 +138,19 @@ var update = function(){
     /*+++++++ Bean 1 Controls +++++++++*/
     //Check for what keys are being pressed
     if (65 in pushed && bean1.x > 10) { // Player holding left
-        bean1.x -= 6;
+        bean1.x -= 3;
     }
 
     if (68 in pushed && bean1.x < 348) { // Player holding right
-        bean1.x += 6;
+        bean1.x += 3;
     }
 
     if (32 in pushed && !bullet.fire) { //Player holding space
         // var bullet = new Bullet ();
         bullet.power = true;
         bullet.fire = false;
+
+        //set the initial position of the bullet
         bullet.x = bean1.x + 40;
         bullet.y = bean1.y + 20;
     }
@@ -162,24 +164,26 @@ var update = function(){
     //Grow the power bar while holding down space
     if(bullet.power){
         powerBar = true;
-        bar.x = bean1.x;
-        bar.width += 10;
-        bullet.length = bar.width + bean1.x; //store the power
-        bullet.centerX = (bullet.length + bean1.x)/2;
-        bullet.radius = bar.width/2;
+        bar.height -= 4;
+        bar.length = -1*bar.height;
+        bullet.length = bar.length; //store the power
+        bullet.centerX = (bullet.length + bean1.x);
+        bullet.radius = bullet.centerX - bean1.x;
     }
 
     if(bullet.fire){
         //Collapse the power bar
         powerBar = false;
-        bar.width = 0;
+        bar.width = 15 ;
+        bar.height = 0;
+        bar.length = 0;
         bulletReady = true;
-        // console.log(bullet.x, bullet.y, bean2.x,bean2.y);
         // Compute the triangle coordinates from the center of rotation
         if(bullet.y < 401){
             bullet.x = bullet.centerX + Math.cos(bullet.angle) * bullet.radius;
             bullet.y = bullet.centerY + Math.sin(bullet.angle) * bullet.radius;
-            bullet.angle += bullet.speed/20;
+            // alert('bullet.centerX = ' + bullet.centerX + ', bullet.centerY = ' + bullet.centerY + ', bullet.angle = ' + bullet.angle + ', bullet.radius = ' + bullet.radius);
+            bullet.angle += bullet.speed/40;
         }
 
         // stop bullet if it hits Bean2
@@ -244,21 +248,33 @@ var draw = function(){
     }
 
     if (gameOver) {
-        context.fillStyle = "black";
-        context.font = "bold 50pt sans-serif";
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.fillText("GAME OVER", canvas.width/2, canvas.height/2);
+        endGame();
     }
 }
 
 /********************************* End game ******************************/
+var endGame = function() {
+    context.fillStyle = "black";
+    context.font = "bold 45pt sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("GAME OVER", canvas.width/2, canvas.height/3);
+    context.font = "bold 20pt sans-serif";
+    context.fillText("Press Enter to play again!", canvas.width/2, canvas.height/2);
 
+    clearInterval(gameLoop);
+}
 
 /********************************* Main Game Loop ******************************/
+
 var main = function(){
     update();
     draw();
 }
-setInterval(main, 1); 
+
+var newGame = function() {
+    gameLoop = setInterval(main, 1); 
+}
+
+newGame();
 
