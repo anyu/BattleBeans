@@ -170,6 +170,18 @@ var update = function(){
 
     /*+++++++ Bean 1 Controls +++++++++*/
     //Check for what keys are being pressed
+
+    if (81 in pushed) { // Q to quit game
+        endGame();
+        resetGame();
+        splash.style.display='block';
+        canvas.style.display='none';
+    }
+
+    // if (80 in pushed) { // P to pause game
+    //     clearInterval(gameLoop);
+    // }
+
     if (65 in pushed && bean1.x > 10) { // Player holding left
         bean1.x -= 3;
     }
