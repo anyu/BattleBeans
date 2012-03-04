@@ -1,46 +1,15 @@
 /********************************* Identify Canvas *****************************/
 
+var splash = document.getElementById('splashscreen');
 var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
 
 //Hide canvas until splashscreen is clicked
-document.getElementById('game').style.display='none';
-
-document.getElementById('splashscreen').onclick = function() {
-    document.getElementById('splashscreen').style.display='none';
-    document.getElementById('game').style.display='block';
+canvas.style.display='none';
+splash.onclick = function() {
+    splash.style.display='none';
+    canvas.style.display='block';
 };
-
-/********************************* Image Control Center ******************************/
-
-var gameOver = false;
-
-var bgReady = false;
-var bgImage = new Image();
-bgImage.onload = function () {
-    bgReady = true;
-};
-bgImage.src = "images/landscape1.jpg";
-
-var bean1Ready = false;
-var bean1Image = new Image();
-bean1Image.onload = function () {
-    bean1Ready = true;
-};
-bean1Image.src = "images/bean1.png";
-
-var bean2Ready = false;
-var bean2Image = new Image();
-bean2Image.onload = function () {
-    bean2Ready = true;
-};
-bean2Image.src = "images/bean2.png";
-
-var bulletReady = false;
-var bulletImage = new Image();
-bulletImage.src = "images/bullet.png";
-
-var powerBar = false;
 
 /********************************* Define Game Objects ******************************/
 
@@ -87,6 +56,37 @@ function PowerBar(){
     this.length = 0;
     this.color = '#00FF00';
 }
+
+/********************************* Image Control Center ******************************/
+
+var gameOver = false;
+
+var bgReady = false;
+var bgImage = new Image();
+bgImage.onload = function () {
+    bgReady = true;
+};
+bgImage.src = "images/landscape1.jpg";
+
+var bean1Ready = false;
+var bean1Image = new Image();
+bean1Image.onload = function () {
+    bean1Ready = true;
+};
+bean1Image.src = "images/bean1.png";
+
+var bean2Ready = false;
+var bean2Image = new Image();
+bean2Image.onload = function () {
+    bean2Ready = true;
+};
+bean2Image.src = "images/bean2.png";
+
+var bulletReady = false;
+var bulletImage = new Image();
+bulletImage.src = "images/bullet.png";
+
+var powerBar = false;
 
 /********************************* Create initial Game Objects ******************************/
 
@@ -289,20 +289,26 @@ var draw = function(){
 
 var endGame = function() {
     context.fillStyle = "black";
-    context.font = "bold 45pt sans-serif";
+    context.font = "45pt Bowlby One SC";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText("GAME OVER", canvas.width/2, canvas.height/3);
-    context.font = "bold 20pt sans-serif";
-    context.fillText("Press Enter to play again!", canvas.width/2, canvas.height/2);
+    context.font = "20pt Bowlby One SC";
+    context.fillText("Click anywhere to play again!", canvas.width/2, canvas.height/2);
 
     clearInterval(gameLoop);
+
+    canvas.onclick = function() {
+        resetGame();
+    };
 }
 
-function clearCanvas() {
-  context.clearRect(0,0, canvas.width, canvas.height);
+function resetGame() {
+    context.clearRect(0,0, canvas.width, canvas.height);
+    context.drawImage(bgImage, bg.x, bg.y);
+    context.drawImage(bean1Image, bean1.x, bean1.y);
+    context.drawImage(bean2Image, bean2.x, bean2.y);
 }
-
 
 /********************************* Main Game Loop ******************************/
 
@@ -313,7 +319,6 @@ var main = function(){
 
 var newGame = function() {
     gameLoop = setInterval(main, 1); 
-    clearCanvas();
 }
 
 newGame();
