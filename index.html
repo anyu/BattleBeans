@@ -1,10 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<title>BattleBeans | An HTML 5 Game</title>
+
+		<!-- Meta Tags -->
 		<meta charset="utf-8">
-		<title>Battlebeans | An HTML 5 Game</title>
+		<meta name="author" content="Dylan Barth An Yu Julie Huynh" />
+		<meta name="copyright" content="2012" />
+		<meta name="keywords" content="html5 javascript game battlebeans beans" />
+		<meta name="description" content="BattleBeans is an epic HTML5 canvas game for cool kids." />
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="images/favicon.ico" />
+
+		<!-- Internal Styling -->
+		<style type="text/css">
+			body { margin-left:auto; margin-right: auto; background-color: #222; padding-top: 20px;}
+			canvas { margin-left:auto; margin-right: auto; border: 10px solid #333;}
+			div#splashscreen { margin-left:auto; width: 900px; height:450px;margin-right: auto; border: 10px solid #333;}*/
+		</style>
+
 	</head>
+
 	<body>
+		<div id="splashscreen">
+			<img src="images/splashscreen.png" />
+		</div> 
+
+		<canvas id="game" width="900" height="450"></canvas> 
+
 		<script src="js/game2.js"></script>
+
 	</body>
 </html>

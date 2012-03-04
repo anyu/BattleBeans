@@ -1,11 +1,18 @@
-/********************************* Identify & Create Canvas ******************************/
-var canvas = document.createElement("canvas");
+/********************************* Identify Canvas *****************************/
+
+var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
-canvas.width = 900;
-canvas.height = 450;
-document.body.appendChild(canvas);
+
+//Hide canvas until splashscreen is clicked
+document.getElementById('game').style.display='none';
+
+document.getElementById('splashscreen').onclick = function() {
+    document.getElementById('splashscreen').style.display='none';
+    document.getElementById('game').style.display='block';
+};
 
 /********************************* Image Control Center ******************************/
+
 var gameOver = false;
 
 var bgReady = false;
@@ -36,6 +43,7 @@ bulletImage.src = "images/bullet.png";
 var powerBar = false;
 
 /********************************* Define Game Objects ******************************/
+
 function Bean(x){
     //bean properties
     this.x = x;
@@ -81,6 +89,10 @@ function PowerBar(){
 }
 
 /********************************* Create initial Game Objects ******************************/
+
+var pushed = {};
+var released = {};
+
 var bg = new Background(); //loads background
 var bean1 = new Bean(Math.random()*300+50); //loads bean1 (random from 50 to 350)
 var bean2 = new Bean(Math.random()*300+550); //loads bean2 (random from 550 to 850)
@@ -98,9 +110,26 @@ if(initial_bean2 == 0) {
     var bean2_right = false;
 }
 
-/********************************* Control Keyboard Input ******************************/
-var pushed = {};
+/********************************* Control Input ******************************/
 
+//Detect mouse click + position on click
+addEventListener("mousedown", getPosition, false);
+
+function getPosition(e) {
+    var mousePosX = e.x;
+    var mousePosY = e.y;
+
+    mousePosX -= canvas.offsetLeft;
+    mousePosY -= canvas.offsetTop;
+
+    // if ((mousePosX >= 505 && mousePosY >= 222) && (mousePosX <= 724 && mousePosY >= 221) &&
+    //     (mousePosX >= 505 && mousePosY <= 262) && (mousePosX <= 724 && mousePosY <= 262) {
+    //     alert("x:" + mousePosX + " y:" + mousePosY);   
+    // }
+
+}
+
+//Detect keyboard input
 addEventListener("keydown", function (e) {
     pushed[e.keyCode] = true;
 }, false);
@@ -109,8 +138,6 @@ addEventListener("keyup", function (e) {
     delete pushed[e.keyCode];
 }, false);
 
-var released = {};
-
 addEventListener("keyup", function (e) {
     released[e.keyCode] = true;
 }, false);
@@ -118,6 +145,11 @@ addEventListener("keyup", function (e) {
 addEventListener("keydown", function (e) {
     delete released[e.keyCode];
 }, false);
+
+addEventListener("cick", function (e) {
+    delete released[e.keyCode];
+}, false);
+
 
 /********************************* Bullet reset ******************************/
 
@@ -133,6 +165,7 @@ var resetBullet = function(){
 }
 
 /********************************* Update Function ******************************/
+
 var update = function(){
 
     /*+++++++ Bean 1 Controls +++++++++*/
@@ -182,7 +215,6 @@ var update = function(){
         if(bullet.y < 401){
             bullet.x = bullet.centerX + Math.cos(bullet.angle) * bullet.radius;
             bullet.y = bullet.centerY + Math.sin(bullet.angle) * bullet.radius;
-            // alert('bullet.centerX = ' + bullet.centerX + ', bullet.centerY = ' + bullet.centerY + ', bullet.angle = ' + bullet.angle + ', bullet.radius = ' + bullet.radius);
             bullet.angle += bullet.speed/40;
         }
 
@@ -223,6 +255,7 @@ var update = function(){
 }
 
 /********************************* Redraw Game Objects ******************************/
+
 var draw = function(){
     if(bgReady){
         context.drawImage(bgImage, bg.x, bg.y);
@@ -253,6 +286,7 @@ var draw = function(){
 }
 
 /********************************* End game ******************************/
+
 var endGame = function() {
     context.fillStyle = "black";
     context.font = "bold 45pt sans-serif";
@@ -265,6 +299,11 @@ var endGame = function() {
     clearInterval(gameLoop);
 }
 
+function clearCanvas() {
+  context.clearRect(0,0, canvas.width, canvas.height);
+}
+
+
 /********************************* Main Game Loop ******************************/
 
 var main = function(){
@@ -274,6 +313,7 @@ var main = function(){
 
 var newGame = function() {
     gameLoop = setInterval(main, 1); 
+    clearCanvas();
 }
 
 newGame();
