@@ -308,6 +308,10 @@ function resetGame() {
     context.drawImage(bgImage, bg.x, bg.y);
     context.drawImage(bean1Image, bean1.x, bean1.y);
     context.drawImage(bean2Image, bean2.x, bean2.y);
+    bean2Ready = true;
+    powerBar = false;
+    gameOver = false;
+    newGame();
 }
 
 /********************************* Main Game Loop ******************************/
