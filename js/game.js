@@ -1,370 +1,320 @@
-// Create the canvas
-var canvas = document.createElement("canvas");
+/********************************* Identify Canvas *****************************/
+
+var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
-canvas.width = 900;
-canvas.height = 450;
-document.body.appendChild(canvas);
+
+//Hide canvas until splashscreen is clicked
+document.getElementById('game').style.display='none';
+
+document.getElementById('splashscreen').onclick = function() {
+    document.getElementById('splashscreen').style.display='none';
+    document.getElementById('game').style.display='block';
+};
+
+/********************************* Image Control Center ******************************/
+
+var gameOver = false;
+
+var bgReady = false;
+var bgImage = new Image();
+bgImage.onload = function () {
+    bgReady = true;
+};
+bgImage.src = "images/landscape1.jpg";
+
+var bean1Ready = false;
+var bean1Image = new Image();
+bean1Image.onload = function () {
+    bean1Ready = true;
+};
+bean1Image.src = "images/bean1.png";
+
+var bean2Ready = false;
+var bean2Image = new Image();
+bean2Image.onload = function () {
+    bean2Ready = true;
+};
+bean2Image.src = "images/bean2.png";
+
+var bulletReady = false;
+var bulletImage = new Image();
+bulletImage.src = "images/bullet.png";
+
+var powerBar = false;
 
 /********************************* Define Game Objects ******************************/
 
-var bean1 = {};
-var bean2 = {};
-var bean1Ready = true;
-
-//Bean Contructor
-function Bean(stage, path, x_pos){
-    this.x = Math.floor(x_pos);
+function Bean(x){
+    //bean properties
+    this.x = x;
     this.y = 350;
     this.height = 30;
     this.width = 20;
-    this.speed = 256;
-    var that = this;
-    var image = new Image();
-    image.src = path;
-    this.render = function(){ 
-        // if (bean1Ready) {
-            stage.drawImage(image, that.x, that.y);
-        // }
-    };
 }
 
-//Bullet Contructor
-function Bullet(stage, path, x_pos){
-    this.x = x_pos;
-    this.y = 350;
-    this.height = 10;
-    this.width = 10;
-    this.speed = 256;
-    var that = this;
-    var image = new Image();
-    image.src = path;
-    image.onload = function(){
-        stage.drawImage(image, that.x, that.y);            
-
-    }
-}
-
-//Background Contructor
-function Game(stage, path){
+function Background(){
+    //Background properties
     this.x = 0;
     this.y = 0;
-    var that = this;
-    var image = new Image();
-    image.src = path;
-    image.onload = function(){
-        stage.drawImage(image, that.x, that.y); //load bg image
-        bean1 = new Bean(context, 'images/bean1.png', Math.random()*350+50); //loads bean1
-        bean2 = new Bean(context, 'images/bean2.png', Math.random()*350+500); //loads bean2
-        bean1.render();
-        bean2.render();
-    }
+    this.height = 450;
+    this.width = 900;
 }
 
-var bg = new Game(context, 'images/landscape1.jpg');
-var bullet = new Bullet(context, 'images/bullet.png', bean1.x + 35);
-
-
-//function crosshairs(x_pos){
-//    crosshairs.x,
-//    crosshairs.y = 350,
-//    crosshairs.image = new Image(),
-//    crosshairs.image.src = 'images/crosshair.png';
-//}
-//
-
-/********************************* Keyboard Input ******************************/
-
-//document.keydown = function(e){
-//    switch(e.keyCode) {
-//        // left
-//        case 65:
-//            bean1.x -= 5;
-//            break;
-//        // right
-//        case 68:
-//            bean1.x += 5;
-//            break;
-//        // spacebar
-//        case 32:
-//            
-//            break;
-//    }
-//}
-//
-//document.onKeyUp = function(){
-//
-//    }
-
-
-
-///********************************* Object Attributes ******************************/
-//var bean1 = {
-//    speed: 256 // movement in pixels per second
-//};
-//var bean2 = {
-//    speed: 256
-//};
-//
-//var bullet = {};
-//var crosshair = {};
-
-//// Reset game
-//var reset = function () {
-//    bean1.x = (Math.floor(Math.random()*601))/2;
-//    bean1.y = 350;
-//    bean2.x = 700;
-//    bean2.y = 350;
-//    bullet.x = bean1.x;
-//    bullet.y = 350;
-//    crosshair.x = bean1.x;
-//    crosshair.y = 350;
-//};
-//
-//// Initial bean2 movement
-//var initial_bean2 = (Math.floor(Math.random()*2));
-//var counter = 0; //used to determine number of times the loop has completed
-//
-//if(initial_bean2 == 1) {
-//    var bean2_right = true;
-//}
-//if(initial_bean2 == 0) {
-//    var bean2_left = false;
-//}
-//
-///********************************* Handle Keyboard Inputs ******************************/
-//var left = false;
-//var right = false;
-//var fire = false;
-//var power = false;
-//
-//var shot_length = bean1.x;
-//var index = 0;     //used to track if spacebar is pressed once or held down
-//
-document.addEventListener('keydown',onKeyDown,false);
-
-// document.onkeydown = onKeyDown;
-// document.onkeyup = onKeyUp;
-var moveLoop = {};
-// when right key is pressed, setInterval(function to move bean xpos, repeat every __milisecs)
-
-
-function onKeyDown(evt){
-
-    console.log(evt); 
+function Bullet(x){
+    //bullet properties
+    this.x = 0;
+    this.y = 350;
+    this.height = 30;
+    this.width = 20;
+    this.length = 0;
+    this.centerX = 0;
+    this.centerY = 400;
+    this.radius = 0;
+    this.speed = 1;
+    this.angle = 180;
     
-    if (evt.keyCode == 65) {        
-        bean1.x -= 20;
-        bean1.render();
-        // bean1Ready = false;
-    }
+    //bullet flags
+    this.power = false;
+    this.fire = false;
+    this.impact = false; 
+}
 
-    if (evt.keyCode == 68) {      
-        bean1.x += 20;
-        bean1.render();
+function PowerBar(){
+    this.x = 15;
+    this.y = 430;
+    this.height = 0;
+    this.width = 15;
+    this.length = 0;
+    this.color = '#00FF00';
+}
 
-    }
+/********************************* Create initial Game Objects ******************************/
+
+var pushed = {};
+var released = {};
+
+var bg = new Background(); //loads background
+var bean1 = new Bean(Math.random()*300+50); //loads bean1 (random from 50 to 350)
+var bean2 = new Bean(Math.random()*300+550); //loads bean2 (random from 550 to 850)
+var bullet = new Bullet();
+var bar = new PowerBar();
+
+/*+++++++++Initial bean2 movement+++++++++*/
+var initial_bean2 = (Math.floor(Math.random()*2));
+var counter = 0; //used to determine number of times the loop has completed
+
+if(initial_bean2 == 1) {
+    var bean2_right = true;
+}
+if(initial_bean2 == 0) {
+    var bean2_right = false;
+}
+
+/********************************* Control Input ******************************/
+
+//Detect mouse click + position on click
+addEventListener("mousedown", getPosition, false);
+
+function getPosition(e) {
+    var mousePosX = e.x;
+    var mousePosY = e.y;
+
+    mousePosX -= canvas.offsetLeft;
+    mousePosY -= canvas.offsetTop;
+
+    // if ((mousePosX >= 505 && mousePosY >= 222) && (mousePosX <= 724 && mousePosY >= 221) &&
+    //     (mousePosX >= 505 && mousePosY <= 262) && (mousePosX <= 724 && mousePosY <= 262) {
+    //     alert("x:" + mousePosX + " y:" + mousePosY);   
+    // }
 
 }
 
-// function onKeyUp(evt) {
+//Detect keyboard input
+addEventListener("keydown", function (e) {
+    pushed[e.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (e) {
+    delete pushed[e.keyCode];
+}, false);
+
+addEventListener("keyup", function (e) {
+    released[e.keyCode] = true;
+}, false);
+
+addEventListener("keydown", function (e) {
+    delete released[e.keyCode];
+}, false);
+
+addEventListener("cick", function (e) {
+    delete released[e.keyCode];
+}, false);
 
 
-// }
+/********************************* Bullet reset ******************************/
+
+var resetBullet = function(){
+    bulletReady = false;
+    bullet.fire = false;
+    bullet.x = bean1.x;
+    bullet.length = 0;
+
+    bullet.radius = 0;
+    bullet.speed = 1;
+    bullet.angle = 180;
+}
+
+/********************************* Update Function ******************************/
+
+var update = function(){
+
+    /*+++++++ Bean 1 Controls +++++++++*/
+    //Check for what keys are being pressed
+    if (65 in pushed && bean1.x > 10) { // Player holding left
+        bean1.x -= 3;
+    }
+
+    if (68 in pushed && bean1.x < 348) { // Player holding right
+        bean1.x += 3;
+    }
+
+    if (32 in pushed && !bullet.fire) { //Player holding space
+        // var bullet = new Bullet ();
+        bullet.power = true;
+        bullet.fire = false;
+
+        //set the initial position of the bullet
+        bullet.x = bean1.x + 40;
+        bullet.y = bean1.y + 20;
+    }
+    
+    //Check for what keys are being released
+    if (32 in released) { //Player released space
+        bullet.power = false;
+        bullet.fire = true;
+    }
+    
+    //Grow the power bar while holding down space
+    if(bullet.power){
+        powerBar = true;
+        bar.height -= 4;
+        bar.length = -1*bar.height;
+        bullet.length = bar.length; //store the power
+        bullet.centerX = (bullet.length + bean1.x);
+        bullet.radius = bullet.centerX - bean1.x;
+    }
+
+    if(bullet.fire){
+        //Collapse the power bar
+        powerBar = false;
+        bar.width = 15 ;
+        bar.height = 0;
+        bar.length = 0;
+        bulletReady = true;
+        // Compute the triangle coordinates from the center of rotation
+        if(bullet.y < 401){
+            bullet.x = bullet.centerX + Math.cos(bullet.angle) * bullet.radius;
+            bullet.y = bullet.centerY + Math.sin(bullet.angle) * bullet.radius;
+            bullet.angle += bullet.speed/40;
+        }
+
+        // stop bullet if it hits Bean2
+        else if (bullet.x+25 >= (bean2.x) && bullet.x <= (bean2.x+50) &&
+            bullet.y+25 >= (bean2.y) && bullet.y <= (bullet.y+75)) {            
+            bean2Ready = false;
+            resetBullet();
+            gameOver = true;
+        }
+
+        // stop bullet if it hits the ground
+        else if(bullet.y >= 401) {
+            resetBullet();       
+        }
+    }
+    
+    /*+++++++ Bean 2 Controls +++++++++*/
+    //loop only allows direction change after a 100 frames
+    counter ++;
+    var random_frame = (Math.floor(Math.random() * 50)) + 50 //generates random btwn 50-100
+    if(counter > random_frame){
+        var random = (Math.floor(Math.random() * 100)); //Generates random between 0 - 99
+        //flip the direction 2% of the time
+        if(random >= 98){
+            bean2_right =! bean2_right;
+            counter = 0; //reset counter after successful direction change
+        }
+    }
+
+    if(bean2_right && bean2.x < 848){
+        bean2.x += 2;
+    }
+    else if (!bean2_right && bean2.x > 552){
+        bean2.x -= 2;
+    }
+    
+}
+
+/********************************* Redraw Game Objects ******************************/
+
+var draw = function(){
+    if(bgReady){
+        context.drawImage(bgImage, bg.x, bg.y);
+    }
+    if (bean1Ready) {
+        context.drawImage(bean1Image, bean1.x, bean1.y);
+    }
+
+    if (bean2Ready) {
+        context.drawImage(bean2Image, bean2.x, bean2.y);
+    }
+    if(bulletReady){
+        context.drawImage(bulletImage, bullet.x, bullet.y);
+    }
+    if(powerBar){
+        context.beginPath();
+        context.rect(bar.x, bar.y, bar.width, bar.height);
+        context.fillStyle = bar.color;
+        context.fill();
+        context.lineWidth = 1;
+        context.strokeStyle = "black";
+        context.stroke();
+    }
+
+    if (gameOver) {
+        endGame();
+    }
+}
+
+/********************************* End game ******************************/
+
+var endGame = function() {
+    context.fillStyle = "black";
+    context.font = "bold 45pt sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("GAME OVER", canvas.width/2, canvas.height/3);
+    context.font = "bold 20pt sans-serif";
+    context.fillText("Press Enter to play again!", canvas.width/2, canvas.height/2);
+
+    clearInterval(gameLoop);
+}
+
+function clearCanvas() {
+  context.clearRect(0,0, canvas.width, canvas.height);
+}
 
 
-// function onKeyDown(e) {
-//     if(!e) {
-//         var e = window.event;
-//     }
-//     switch(e.keyCode) {
-//         case 65:
-//             moveLoop = setInterval(moveBeanRight(1000),20);
-//     }
-// }
+/********************************* Main Game Loop ******************************/
 
-// function onKeyUp(e) {
-//     if(!e) {
-//         var e = window.event;
-//     }
-//     switch(e.keyCode) {
-//        // left
-//         case 65:
-//             clearInterval(moveLoop);
-//     }
-// }
+var main = function(){
+    update();
+    draw();
+}
 
-// var moveBeanRight = function(e) {
-//     bean1.x += bean1.speed * e;
+var newGame = function() {
+    gameLoop = setInterval(main, 1); 
+    clearCanvas();
+}
 
-// }
-
-
-// var update = function(e){
-// //    if(left){
-//        bean1.x -= bean1.speed * e;
-//    }
-//    if(right){
-//        bean1.x += bean1.speed * e;
-//    }
-
-// function onKeyDown(e) {
-//    if(!e) {
-//        var e = window.event;
-//    }
-//    switch(e.keyCode) {
-//        // left
-//        case 65:
-//            left = true;
-//            right = false;
-//            break;
-//        // right
-//        case 68:
-//            right = true;
-//            left = false;
-//            break;
-//        // spacebar for power
-//        case 32:
-//            if(fire != true) {     // can't press space again while bullet in flight
-//                power = true;
-//                index++;
-//            }
-//            break;
-//    }
-//}
-//
-//function onKeyUp(e) {
-//    if(!e) {
-//        var e = window.event;
-//    }
-//    switch(e.keyCode) {
-//        // left
-//        case 65:
-//            left = false;
-//            break;
-//        // right
-//        case 68:
-//            right = false;
-//            break;
-//        // spacebar for firing
-//        case 32:
-//            if(fire != true) {
-//                power = false;
-//                fire = true;
-//                bullet.x = bean1.x;
-//                index = 0;
-//                break;
-//            }
-//    }
-//}
-//
-//function shoot() {
-//    bulletReady = true;
-//    bullet.x += 3;
-//
-//    if (bullet.x >= bean2.x) {   // if bullet hits bean 2
-//        fire = false;
-//        bean2Ready = false;
-//        bulletReady = false;
-//        crosshairReady = false;
-//
-//        bullet.x = bean1.x;
-//        gameOver();
-//    }
-//
-//    if (bullet.x >= shot_length) {   // if bullet goes past shot length
-//        fire = false;
-//        bulletReady = false;
-//        crosshairReady = false;
-//
-//        bullet.x = bean1.x;
-//    }
-//}
-//
-///************************************ Start update **************************/
-//
-//var update = function(e){
-//    if(left){
-//        bean1.x -= bean1.speed * e;
-//    }
-//    if(right){
-//        bean1.x += bean1.speed * e;
-//    }
-//    if(power){
-//        if(index == 1) {            // when spacebar is pressed only once, reset crosshair+shot_length to bean1 position
-//            shot_length = bean1.x;
-//            crosshair.x = bean1.x;
-//        }
-//        crosshairReady = true;
-//        shot_length += 3;
-//        crosshair.x += 3;
-//    }
-//
-//    if(fire){
-//        shoot();
-//    }
-//
-//    //stop bean from going past midpoint
-//    bean1.x = bean1.x.stopPoint(0, (canvas.width/2) - 50);
-//    bean2.x = bean2.x.stopPoint((canvas.width/2) + 50, canvas.width - 55);
-//
-//    //loop only allows direction change after a 100 frames
-//    counter ++;
-//    var random_frame = (Math.floor(Math.random() * 50)) + 50 //generates random btwn 50-100
-//    if(counter > random_frame){
-//        var random = (Math.floor(Math.random() * 100)); //Generates random between 0 - 99
-//        //flip the direction 2% of the time
-//        if(random >= 98){
-//            bean2_right =! bean2_right;
-//            counter = 0; //reset counter after successful direction change
-//        }
-//    }
-//
-//    if(bean2_right){
-//        bean2.x += bean2.speed * e;
-//    }
-//    else{
-//        bean2.x -= bean2.speed * e;
-//    }
-//};
-//
-//// Stop beans from going off canvas or past middle
-//Number.prototype.stopPoint = function(min, max) {
-//    return Math.min(Math.max(this, min), max);
-//};
-//
-//
-
-////***********************************
-////This didn't work either :/
-////***********************************
-////    if (aim_arcReady) {
-////        context.arc(bean1.x, bean1.y, ((bean1.x/bean2.x)/2), math.pi, (2*math.pi), false);
-////        context.lineWidth = 2;
-////        context.strokeStyle = "#000"; // line color = black
-////        context.stroke();
-////    }
-////************************************
-//
-//
-//};
-//
-///********************************* Main Game Loop ******************************/
-//var main = function () {
-//    var now = Date.now();
-//    var delta = now - then;
-//
-//    update(delta / 1000);
-//    render();
-//
-//    then = now;
-//};
-//
-//var gameOver = function() {
-//    reset();
-//}
-//
-//// Start game!
-//reset();
-//var then = Date.now();
-//setInterval(main, 1); // Execute as fast as possible
+newGame();
 
