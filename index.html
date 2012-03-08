@@ -18,34 +18,38 @@
 
 		<!-- Internal Styling -->
 		<style type="text/css">
-			body { margin-left:auto; margin-right: auto; background-color: #222; padding-top: 20px; font-family: 'Bowlby One SC', arial;}
-			h4 { font-family: 'Shadows Into Light Two'; color: white; font-size: 20px; }
+			body {
+				text-align:center; 
+				background-color: #222; 
+				padding-top: 20px; 
+				font-family: 'Bowlby One SC', arial;
+				color: #fff;
+
+			}
 			canvas { margin-left:auto; margin-right: auto; border: 10px solid #333; }
-			div#splashscreen { margin-left:auto; width: 900px; height:450px;margin-right: auto; border: 10px solid #333; }
-			div#container { padding-left:200px;}
-			div#controls { font-family: 'Shadows Into Light Two'; color: white; font-size: 20px; padding-top: 5px; }
-			ul li { display: inline; list-style-type: none; }
+
+			#splashscreen { margin-left:auto; width: 900px; height:450px;margin-right: auto; border: 10px solid #333; }
+
+			#controls p {
+				font-family: 'Shadows Into Light Two', arial;
+			}
 		</style>
 
 	</head>
 
-	<body>
+	<body>		
+
 		<div id="splashscreen">
 			<img src="images/splashscreen.png" />
-		</div> 
+		</div>  
 
 		<canvas id="game" width="900" height="450"></canvas> 
-
-		<div id="container">
-			<div id="controls">		
-				<ul>
-					<li>[ A ] Move left &nbsp; &nbsp; &nbsp; [ Spacebar ] Hold and release to fire </li><br/>
-					<li>[ D ] Move right &nbsp; &nbsp; &nbsp;[ Q ] Quit game </li>
-		        </ul>
-		    </div>
-        </div>
-
 		<script src="js/game.js"></script>
+
+		<div id="controls">
+			<p>[ A ] = Move left &nbsp;&nbsp;&nbsp;&nbsp; [ D ] = Move right &nbsp;&nbsp;&nbsp;&nbsp; [ Space ] = Hold and release to shoot &nbsp;&nbsp;	  &nbsp;&nbsp; [ R ] = Reset game
+			</p>
+		</div>
 
 	</body>
 </html>
