@@ -1,0 +1,63 @@
+body {
+	font-family: 'Bowlby One SC', arial;
+	color: #fff;
+	background-color: #222; 
+	text-align:center; 
+	padding-top: 20px; 
+}
+
+canvas { 
+	margin-left:auto; 
+	margin-right: auto; 
+	border: 10px solid #333; 
+}
+
+#splashscreen { 
+	width: 900px; 
+	height: 450px;
+	text-align: center; 
+	margin-left: auto; 
+	margin-right: auto; 
+	border: 10px solid #333; 
+}
+
+#credits {
+	width: 900px; 
+	height: 450px;
+	text-align: center; 
+	margin-left: auto; 
+	margin-right: auto; 
+	border: 10px solid #333; 
+}
+
+#controls {
+	margin-top: 20px;
+	font-family: 'Shadows Into Light Two', arial;
+}
+
+#play-button{
+	background: url('../images/playgame.png');
+	width: 224px;
+	height: 50px;
+	position: fixed;
+	top: 230px;
+	left: 520px;
+}
+
+#play-button:hover, #play-button:active {
+	background: url('../images/playgame-hover.png');
+}
+
+#credits-button {
+	background-color: red;
+	background: url('../images/credits.png');
+	width: 224px;
+	height: 47px;
+	position: fixed;
+	top: 290px;
+	left: 520px;
+}
+
+#credits-button:hover, #credits-button:active {
+	background: url('../images/credits-hover.png');
+}

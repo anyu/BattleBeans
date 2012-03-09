@@ -13,42 +13,32 @@
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="images/favicon.ico" />
 
-		<!-- Google Web Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light+Two|Bowlby+One+SC|Chewy' rel='stylesheet' type='text/css'>
-
-		<!-- Internal Styling -->
-		<style type="text/css">
-			body {
-				text-align:center; 
-				background-color: #222; 
-				padding-top: 20px; 
-				font-family: 'Bowlby One SC', arial;
-				color: #fff;
-
-			}
-			canvas { margin-left:auto; margin-right: auto; border: 10px solid #333; }
-
-			#splashscreen { margin-left:auto; width: 900px; height:450px;margin-right: auto; border: 10px solid #333; }
-
-			#controls p {
-				font-family: 'Shadows Into Light Two', arial;
-			}
-		</style>
-
+		<!-- Stylesheets -->
+		<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light+Two|Bowlby+One+SC|Chewy' rel='stylesheet' type='text/css'>	
+		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+			
 	</head>
 
 	<body>		
-
-		<div id="splashscreen">
+		<div id="splashscreen">			
 			<img src="images/splashscreen.png" />
+			<a href="#" id ="play-button"></a>
+			<a href="#" id= "credits-button"></a>
+		</div>  
+
+		<div id="credits">	
+			<h4>CLICK TO GO BACK</h4>		
+			<img src="images/landscape2.jpg" />
 		</div>  
 
 		<canvas id="game" width="900" height="450"></canvas> 
 		<script src="js/game.js"></script>
 
 		<div id="controls">
-			<p>[ A ] = Move left &nbsp;&nbsp;&nbsp;&nbsp; [ D ] = Move right &nbsp;&nbsp;&nbsp;&nbsp; [ Space ] = Hold and release to shoot &nbsp;&nbsp;	  &nbsp;&nbsp; [ R ] = Reset game
-			</p>
+			[ A ] = Move left &nbsp;&nbsp;&nbsp;&nbsp; 
+			[ D ] = Move right &nbsp;&nbsp;&nbsp;&nbsp; 
+			[ Space ] = Hold and release to shoot &nbsp;&nbsp;&nbsp;&nbsp; 
+			[ Q ] = Quit 
 		</div>
 
 	</body>

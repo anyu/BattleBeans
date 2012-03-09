@@ -1,19 +1,46 @@
-/********************************* Identify Canvas *****************************/
+/********************************* Canvas/Screen Toggles *****************************/
 
 var splash = document.getElementById('splashscreen');
 var canvas = document.getElementById("game");
+var credits_page = document.getElementById('credits');
 var context = canvas.getContext("2d");
 
-canvas.style.display='none';
-splash.onclick = function() {
-    splash.style.display='none';
-    canvas.style.display='block';
+var play_button = document.getElementById('play-button');
+var credits_button = document.getElementById('credits-button');
+
+canvas.style.display = 'none';
+credits_page.style.display = 'none';
+
+// Menu buttons
+play_button.onclick = function(){
+    splash.style.display = 'none';
+    canvas.style.display = 'block';
     initialize();
 };
 
-function initialize() {
+credits_button.onclick = function(){
+    splash.style.display = 'none';
+    credits_page.style.display = 'block'
+};
+
+// Credit page
+credits_page.onclick = function() {
+    splash.style.display = 'block';
+    credits_page.style.display = 'none'
+
+}
+
+//Important for reset
+var gameRunning = false;
+
+function initialize() { 
     /********************************* GameOver Flag ******************************/
     var gameOver = false;
+    var b1_hurtness = 0;
+    var b2_hurtness = 0;
+
+    //Important for reset
+    gameRunning = true;
 
     /********************************* Define Game Objects ******************************/
 
@@ -21,8 +48,8 @@ function initialize() {
         //bean properties
         this.x = x;
         this.y = 350;
-        this.height = 30;
-        this.width = 20;
+        this.height = 75;
+        this.width = 50;
         this.health = 3;
     }
 
@@ -38,8 +65,8 @@ function initialize() {
         //bullet properties
         this.x = 0;
         this.y = 350;
-        this.height = 30;
-        this.width = 20;
+        this.height = 25;
+        this.width = 25;
         this.length = 0;
         this.centerX = 0;
         this.centerY = 400;
@@ -61,13 +88,13 @@ function initialize() {
         this.color = color;
     }
 
-    function Bean1Health(x,y) {
+    function Bean1Health(x, y) {
         this.x = x;
         this.y = y;
         this.ready = true;
     }
 
-    function Bean2Health(x,y) {
+    function Bean2Health(x, y) {
         this.x = x;
         this.y = y;
         this.ready = true;
@@ -118,6 +145,15 @@ function initialize() {
     var b2healthImage = new Image();
     b2healthImage.src = "images/b2health.png";
 
+    /*++++++++Bean on Hit Images++++++++*/
+    var b1hurtReady = false;
+    var b1hurtImage = new Image();
+    b1hurtImage.src = "images/bean1-hurt.png";
+
+    var b2hurtReady = false;
+    var b2hurtImage = new Image();
+    b2hurtImage.src = "images/bean2-hurt.png";
+
     /********************************* Create initial Game Objects ******************************/
 
     /*++++++++Keyboard Inputs++++++++*/
@@ -133,13 +169,13 @@ function initialize() {
     var bar = new PowerBar(15, '#00CD00');
     var ebar = new PowerBar(875, '#CD0000');
 
-    var b1health_1 = new Bean1Health(20,20);
-    var b1health_2 = new Bean1Health(70,20);
-    var b1health_3 = new Bean1Health(120,20);
+    var b1health_1 = new Bean1Health(20, 20);
+    var b1health_2 = new Bean1Health(70, 20);
+    var b1health_3 = new Bean1Health(120, 20);
 
-    var b2health_1 = new Bean2Health(700,20);
-    var b2health_2 = new Bean2Health(750,20);
-    var b2health_3 = new Bean2Health(800,20);
+    var b2health_1 = new Bean2Health(700, 20);
+    var b2health_2 = new Bean2Health(750, 20);
+    var b2health_3 = new Bean2Health(800, 20);
 
     /********************************* Initial Bean2 Movement ******************************/
     var initial_bean2 = (Math.floor(Math.random() * 2));
@@ -195,9 +231,21 @@ function initialize() {
             ebullet.angle = 180;
         }
 
-    /********************************* Update Function ******************************/
+        /********************************* Update Function ******************************/
 
     var update = function() {
+
+            /*+++++++ Game State Controls +++++++++*/
+
+            // if (80 in pushed) { // pause
+      
+            // }
+
+            if (81 in pushed) { // quit
+                endGame();
+                splash.style.display = 'block';
+                canvas.style.display = 'none';
+            }
 
             /*+++++++ Bean 1 Controls +++++++++*/
             if (65 in pushed && bean1.x > 35) { // left
@@ -251,17 +299,18 @@ function initialize() {
                 else if (bullet.x + 25 >= (bean2.x) && bullet.x <= (bean2.x + 50) && bullet.y + 25 >= (bean2.y) && bullet.y <= (bullet.y + 75)) {
                     resetBullet();
 
+                    b2hurtReady = true;
+                    bean2Ready= false;
+
                     if (b2health_1.ready) {
                         b2health_1.ready = false;
-                    }
-                    else if (b2health_2.ready) {
+                    } else if (b2health_2.ready) {
                         b2health_2.ready = false;
-                    }
-                    else {
+                    } else {
                         b2health_3.ready = false;
                         bean2Ready = false;
                         gameOver = true;
-                   }
+                    }
                 }
 
                 // stop bullet if it hits the ground
@@ -332,16 +381,18 @@ function initialize() {
                 }
 
                 // stop bullet if it hits Bean1
-                else if (ebullet.x + 25 >= (bean1.x) && ebullet.x <= (bean1.x + 50) && bullet.y + 25 >= (bean2.y) && bullet.y <= (bullet.y + 75)) {
+                else if (ebullet.x + 25 >= (bean1.x) && ebullet.x <= (bean1.x + 50) && ebullet.y - 25 >= (bean2.y) && ebullet.y <= (bullet.y + 75)) {
                     resetEBullet();
+
+                    b1hurtReady = true;
+                    bean1Ready= false;
+
                     if (b1health_3.ready) {
                         b1health_3.ready = false;
-                    }
-                    else if (b1health_2.ready) {
+                    } else if (b1health_2.ready) {
                         b1health_2.ready = false;
-                    }
-                    else {
-                        b1health_1.ready = false; 
+                    } else {
+                        b1health_1.ready = false;
                         bean1Ready = false;
                         gameOver = true;
                     }
@@ -356,7 +407,6 @@ function initialize() {
         }
 
         /********************************* Redraw Game Objects ******************************/
-
     var draw = function() {
             if (bgReady) {
                 context.drawImage(bgImage, bg.x, bg.y);
@@ -373,6 +423,26 @@ function initialize() {
             }
             if (ebulletReady) {
                 context.drawImage(ebulletImage, ebullet.x, ebullet.y);
+            }
+
+            if (b1hurtReady) {
+                context.drawImage(b1hurtImage, bean1.x, bean1.y);
+                if (b1_hurtness > 100) {
+                    b1hurtReady = false;
+                    bean1Ready = true; 
+                    b1_hurtness = 0;
+                }
+                b1_hurtness++;
+            }
+
+             if (b2hurtReady) {
+                context.drawImage(b2hurtImage, bean2.x, bean2.y);
+                if (b2_hurtness > 100) {
+                    b2hurtReady = false;
+                    bean2Ready = true; 
+                    b2_hurtness = 0;
+                }
+                b2_hurtness++;
             }
 
             if (powerBar) {
@@ -420,9 +490,10 @@ function initialize() {
 
         }
 
-    /********************************* End Game ******************************/
+        /********************************* End Game ******************************/
 
     function endGame() {
+        gameRunning = false;
         clearInterval(gameLoop);
         bgReady = false;
         bean1Ready = false;
@@ -450,9 +521,9 @@ function initialize() {
     /********************************* Main Game Loop ******************************/
 
     var game = function() {
-        update();
-        draw();
-    }
+            update();
+            draw();
+        }
 
     function newGame() {
         gameLoop = setInterval(game, 1);
@@ -462,8 +533,10 @@ function initialize() {
 
 }
 
-addEventListener("keydown", function(e) {
-    if (e.keyCode == 82) { // R
+document.onkeydown = onkeydownhandler;
+
+function onkeydownhandler(e) {
+    if (!gameRunning && e.keyCode == 82) {
         initialize();
     }
-}, false);
+}
