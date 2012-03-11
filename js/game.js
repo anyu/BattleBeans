@@ -1,5 +1,10 @@
 /********************************* Sound Effect Variables *****************************/
-var themeMusic = new Audio("sounds/theme.ogg");
+var themeMusic = new Audio("sounds/alt_theme.ogg"); //theme.ogg
+var ouch = new Audio("sounds/ouch.mp3");
+var win = new Audio("sounds/win.wav");
+var loss = new Audio("sounds/loss.mp3");
+
+
 
 /********************************* Canvas/Screen Toggles *****************************/
 
@@ -15,13 +20,13 @@ canvas.style.display = 'none';
 credits_page.style.display = 'none';
 
 // Menu buttons
-play_button.onclick = function(){
+play_button.onclick = function() {
     splash.style.display = 'none';
     canvas.style.display = 'block';
     initialize();
 };
 
-credits_button.onclick = function(){
+credits_button.onclick = function() {
     splash.style.display = 'none';
     credits_page.style.display = 'block'
 };
@@ -35,8 +40,7 @@ credits_page.onclick = function() {
 //Important for reset
 var gameRunning = false;
 
-function initialize() { 
-    /********************************* Global Flags ******************************/
+function initialize() { /********************************* Global Flags ******************************/
     var gameOver = false;
     var b1_hurtness = 0;
     var b2_hurtness = 0;
@@ -181,7 +185,7 @@ function initialize() {
 
     /********************************* Initial Bean2 Movement ******************************/
     var initial_bean2 = (Math.floor(Math.random() * 2));
-    var counter = 0;   //used later to determine number of times the update loop has completed
+    var counter = 0; //used later to determine number of times the update loop has completed
     if (initial_bean2 == 1) {
         var bean2_right = true;
     }
@@ -240,9 +244,7 @@ function initialize() {
             /*+++++++ Game State Controls +++++++++*/
 
             // if (80 in pushed) { // pause
-      
             // }
-
             if (81 in pushed) { // quit
                 endGame();
                 splash.style.display = 'block';
@@ -299,10 +301,11 @@ function initialize() {
 
                 // stop bullet if it hits Bean2
                 else if (bullet.x + 25 >= (bean2.x) && bullet.x <= (bean2.x + 50) && bullet.y + 25 >= (bean2.y) && bullet.y <= (bullet.y + 75)) {
+                    ouch.play();
                     resetBullet();
 
                     b2hurtReady = true;
-                    bean2Ready= false;
+                    bean2Ready = false;
 
                     if (b2health_1.ready) {
                         b2health_1.ready = false;
@@ -383,11 +386,12 @@ function initialize() {
                 }
 
                 // stop bullet if it hits Bean1
-                else if ((ebullet.x <= bean1.x + 50) && (ebullet.x+25 >= bean1.x) && (ebullet.y+25 >= bean1.y)) {
-                    bulletReady=false;
+                else if ((ebullet.x <= bean1.x + 50) && (ebullet.x + 25 >= bean1.x) && (ebullet.y + 25 >= bean1.y)) {
+                    ouch.play();
+                    bulletReady = false;
                     resetEBullet();
                     b1hurtReady = true;
-                    bean1Ready= false;
+                    bean1Ready = false;
 
                     if (b1health_3.ready) {
                         b1health_3.ready = false;
@@ -431,17 +435,17 @@ function initialize() {
                 context.drawImage(b1hurtImage, bean1.x, bean1.y);
                 if (b1_hurtness > 100) {
                     b1hurtReady = false;
-                    bean1Ready = true; 
+                    bean1Ready = true;
                     b1_hurtness = 0;
                 }
                 b1_hurtness++;
             }
 
-             if (b2hurtReady) {
+            if (b2hurtReady) {
                 context.drawImage(b2hurtImage, bean2.x, bean2.y);
                 if (b2_hurtness > 100) {
                     b2hurtReady = false;
-                    bean2Ready = true; 
+                    bean2Ready = true;
                     b2_hurtness = 0;
                 }
                 b2_hurtness++;
@@ -491,7 +495,7 @@ function initialize() {
             }
         }
 
-    /********************************* End Game ******************************/
+        /********************************* End Game ******************************/
 
     function endGame() {
         themeMusic.pause();
@@ -505,6 +509,8 @@ function initialize() {
 
         context.fill();
         if (!b1health_1.ready) {
+            loss.currentTime = 0;
+            loss.play();
             context.fillStyle = 'black';
             context.font = "25pt Bowlby One SC";
             context.fillText("Awwww, you dead.", 300, 200);
@@ -512,6 +518,8 @@ function initialize() {
 
         }
         if (!b2health_3.ready) {
+            win.currentTime = 0;
+            win.play();
             context.fillStyle = 'black';
             context.font = "25pt Bowlby One SC";
             context.fillText("Epic Win. You da bean!", 260, 200);
@@ -529,7 +537,11 @@ function initialize() {
 
     function newGame() {
         gameLoop = setInterval(game, 1);
+        themeMusic.currentTime = 0;
+        themeMusic.loop = true;
         themeMusic.play();
+        loss.pause();
+        win.pause();
     }
 
     newGame();
@@ -538,7 +550,7 @@ function initialize() {
 document.onkeydown = onkeydownhandler;
 
 function onkeydownhandler(e) {
-    if (!gameRunning && e.keyCode == 82) {     //R to restart
+    if (!gameRunning && e.keyCode == 82) { //R to restart
         initialize();
     }
 }

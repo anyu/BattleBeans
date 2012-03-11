@@ -1,4 +1,5 @@
 body {
+	min-width: 900px;
 	font-family: 'Bowlby One SC', arial;
 	color: #fff;
 	background-color: #222; 
@@ -19,6 +20,7 @@ canvas {
 	margin-left: auto; 
 	margin-right: auto; 
 	border: 10px solid #333; 
+	position:relative;
 }
 
 #credits {
@@ -48,8 +50,8 @@ canvas {
 	background: url('../images/playgame.png');
 	width: 224px;
 	height: 50px;
-	top: 230px;
-	left: 450px;
+	top: 200px;
+	left: 340px;
 	position: absolute;
 }
 
@@ -62,8 +64,8 @@ canvas {
 	background: url('../images/credits.png');
 	width: 224px;
 	height: 47px;
-	top: 290px;
-	left: 450px;
+	top: 270px;
+	left: 340px;
 	position: absolute;
 }
 
@@ -76,3 +78,4 @@ canvas {
 	text-transform: uppercase;
 	margin-top:20px;
 }
+

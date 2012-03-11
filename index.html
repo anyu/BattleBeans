@@ -1,67 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>BattleBeans | An HTML 5 Game</title>
+<head>
+	<title>BattleBeans | An Epic HTML5 Game</title>
 
-		<!-- Meta Tags -->
-		<meta charset="utf-8">
-		<meta name="author" content="Dylan Barth An Yu Julie Huynh" />
-		<meta name="copyright" content="2012" />
-		<meta name="keywords" content="html5 javascript game battlebeans beans" />
-		<meta name="description" content="BattleBeans is an epic HTML5 canvas game that all the cool kids are playing." />
-		
-		<!-- Favicon -->
-		<link rel="shortcut icon" href="images/favicon.ico" />
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="author" content="Dylan Barth An Yu Julie Huynh" />
+	<meta name="copyright" content="2012" />
+	<meta name="keywords" content="html5 javascript game battlebeans beans" />
+	<meta name="description" content="BattleBeans is an epic HTML5 canvas game that all the cool kids are playing." />
 
-		<!-- Stylesheets -->
-		<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light+Two|Bowlby+One+SC|Chewy' rel='stylesheet' type='text/css'>	
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="images/favicon.ico" />
 
-		<!--Sharing-->
-		<script type="text/javascript">var switchTo5x=true;</script>
-		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-		<script type="text/javascript">stLight.options({publisher: "ur-dde7f2c6-76be-24ef-c813-885f9f438191"}); </script>
-			
-	</head>
+	<!-- Stylesheets -->
+	<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light+Two|Bowlby+One+SC|Chewy' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="styles/main.css" />
 
-	<body>		
-		<div id="splashscreen">			
-			<img src="images/splashscreen.png" />
+	<!--Sharing-->
+	<script type="text/javascript">var switchTo5x=true;</script>
+	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+	<script type="text/javascript">stLight.options({publisher: "ur-a2a1f05f-27e6-9c69-dc11-2bd56f26bb00"}); </script>
+
+</head>
+
+<body>
+	<div id="splashscreen">
+		<img src="images/splashscreen.png" />
+		<div id="splash_buttons">
 			<a href="#" id="play-button"></a>
 			<a href="#" id= "credits-button"></a>
-		</div>  
+		</div>
+	</div>
 
-		<div id="credits">	
-			<img src="images/credits-page.png" />
-			<a href="#" class="back"><img src="images/back.png"/></a>
-		</div>  
+	<div id="credits">
+		<img src="images/credits-page.png" />
+		<a href="#" class="back">
+			<img src="images/back.png"/>
+		</a>
+	</div>
 
-		<canvas id="game" width="900" height="450"></canvas> 
-		<script src="js/game.js"></script>
+	<canvas id="game" width="900" height="450"></canvas>
+	<script src="js/game-min.js"></script>
 
-		<div id="controls">
-			[ A ] = Move left &nbsp;&nbsp;&nbsp;&nbsp; 
+	<div id="controls">
+		[ A ] = Move left &nbsp;&nbsp;&nbsp;&nbsp; 
 			[ D ] = Move right &nbsp;&nbsp;&nbsp;&nbsp; 
 			[ Space ] = Hold and release to shoot &nbsp;&nbsp;&nbsp;&nbsp; 
-			[ Q ] = Quit 
-		</div>
+			[ Q ] = Quit
+	</div>
 
-		<!--Audio-->
-		<!-- <audio autoplay="autoplay" loop="loop">
- 		 <source src="sounds/theme.ogg" type="audio/ogg" />
-  		Your browser does not support the audio element.
-		</audio> -->
+	<!--Sharing-->
+	<div class="sharing">
+		Share with friends!
+		<br/>
+		<span class='st_facebook_large' displayText='Facebook'></span>
+		<span class='st_twitter_large' displayText='Tweet'></span>
+		<span class='st_pinterest_large' displayText='Pinterest'></span>
+		<span class='st_stumbleupon_large' displayText='StumbleUpon'></span>
+		<span class='st_email_large' displayText='Email'></span>
+	</div>
+<!-- Analytics -->
+	<script type="text/javascript">
 
-		<!--Sharing-->
-		<div class="sharing">
-			Share with friends!<br/>
-			<span class='st_facebook_large' displayText='Facebook'></span>
-			<span class='st_twitter_large' displayText='Tweet'></span>
-			<span class='st_pinterest_large' displayText='Pinterest'></span>
-			<span class='st_stumbleupon_large' displayText='StumbleUpon'></span>
-			<span class='st_email_large' displayText='Email'></span>
-			<span class='st_sharethis_large' displayText='ShareThis'></span>
-		</div>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21447391-8']);
+  _gaq.push(['_trackPageview']);
 
-	</body>
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
 </html>
