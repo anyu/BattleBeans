@@ -30,18 +30,27 @@ canvas {
 	border: 10px solid #333; 
 }
 
+.back {
+	width: 100px;
+	height: 30px;
+	top: -60px;
+	left: 0px;
+	position: relative;
+}
+
+/************************** Menu **************************/
 #controls {
-	margin-top: 20px;
+	margin-top: 10px;
 	font-family: 'Shadows Into Light Two', arial;
 }
 
-#play-button{
+#play-button {
 	background: url('../images/playgame.png');
 	width: 224px;
 	height: 50px;
-	position: fixed;
 	top: 230px;
-	left: 520px;
+	left: 450px;
+	position: absolute;
 }
 
 #play-button:hover, #play-button:active {
@@ -53,11 +62,17 @@ canvas {
 	background: url('../images/credits.png');
 	width: 224px;
 	height: 47px;
-	position: fixed;
 	top: 290px;
-	left: 520px;
+	left: 450px;
+	position: absolute;
 }
 
 #credits-button:hover, #credits-button:active {
 	background: url('../images/credits-hover.png');
+}
+
+.sharing {
+	font-family: 'Shadows Into Light Two', arial;
+	text-transform: uppercase;
+	margin-top:20px;
 }

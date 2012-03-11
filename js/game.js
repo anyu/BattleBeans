@@ -1,3 +1,6 @@
+/********************************* Sound Effect Variables *****************************/
+var themeMusic = new Audio("sounds/theme.ogg");
+
 /********************************* Canvas/Screen Toggles *****************************/
 
 var splash = document.getElementById('splashscreen');
@@ -27,14 +30,13 @@ credits_button.onclick = function(){
 credits_page.onclick = function() {
     splash.style.display = 'block';
     credits_page.style.display = 'none'
-
 }
 
 //Important for reset
 var gameRunning = false;
 
 function initialize() { 
-    /********************************* GameOver Flag ******************************/
+    /********************************* Global Flags ******************************/
     var gameOver = false;
     var b1_hurtness = 0;
     var b2_hurtness = 0;
@@ -81,7 +83,7 @@ function initialize() {
 
     function PowerBar(x, color) {
         this.x = x;
-        this.y = 430;
+        this.y = 420;
         this.height = 0;
         this.width = 15;
         this.length = 0;
@@ -156,30 +158,30 @@ function initialize() {
 
     /********************************* Create initial Game Objects ******************************/
 
-    /*++++++++Keyboard Inputs++++++++*/
+    /*++++++++Keyboard Input Objects++++++++*/
     var pushed = {};
     var released = {};
 
-    /*++++++++Images++++++++*/
+    /*++++++++Objects++++++++*/
     var bg = new Background();
     var bean1 = new Bean(Math.random() * 250 + 50);
     var bean2 = new Bean(Math.random() * 300 + 550);
     var bullet = new Bullet();
     var ebullet = new Bullet();
-    var bar = new PowerBar(15, '#00CD00');
-    var ebar = new PowerBar(875, '#CD0000');
+    var bar = new PowerBar(15, '#00FF00');
+    var ebar = new PowerBar(870, '#CD0000');
 
-    var b1health_1 = new Bean1Health(20, 20);
-    var b1health_2 = new Bean1Health(70, 20);
-    var b1health_3 = new Bean1Health(120, 20);
+    var b1health_1 = new Bean1Health(45, 20);
+    var b1health_2 = new Bean1Health(90, 20);
+    var b1health_3 = new Bean1Health(135, 20);
 
-    var b2health_1 = new Bean2Health(700, 20);
-    var b2health_2 = new Bean2Health(750, 20);
-    var b2health_3 = new Bean2Health(800, 20);
+    var b2health_1 = new Bean2Health(720, 20);
+    var b2health_2 = new Bean2Health(765, 20);
+    var b2health_3 = new Bean2Health(810, 20);
 
     /********************************* Initial Bean2 Movement ******************************/
     var initial_bean2 = (Math.floor(Math.random() * 2));
-    var counter = 0; //used later to determine number of times the update loop has completed
+    var counter = 0;   //used later to determine number of times the update loop has completed
     if (initial_bean2 == 1) {
         var bean2_right = true;
     }
@@ -381,9 +383,9 @@ function initialize() {
                 }
 
                 // stop bullet if it hits Bean1
-                else if (ebullet.x + 25 >= (bean1.x) && ebullet.x <= (bean1.x + 50) && ebullet.y - 25 >= (bean2.y) && ebullet.y <= (bullet.y + 75)) {
+                else if ((ebullet.x <= bean1.x + 50) && (ebullet.x+25 >= bean1.x) && (ebullet.y+25 >= bean1.y)) {
+                    bulletReady=false;
                     resetEBullet();
-
                     b1hurtReady = true;
                     bean1Ready= false;
 
@@ -487,12 +489,12 @@ function initialize() {
             if (b2health_3.ready) {
                 context.drawImage(b2healthImage, b2health_3.x, b2health_3.y);
             }
-
         }
 
-        /********************************* End Game ******************************/
+    /********************************* End Game ******************************/
 
     function endGame() {
+        themeMusic.pause();
         gameRunning = false;
         clearInterval(gameLoop);
         bgReady = false;
@@ -505,15 +507,15 @@ function initialize() {
         if (!b1health_1.ready) {
             context.fillStyle = 'black';
             context.font = "25pt Bowlby One SC";
-            context.fillText("Awwwww, you dead.", 300, 225);
-            context.fillText("R to restart", 350, 300);
+            context.fillText("Awwww, you dead.", 300, 200);
+            context.fillText("[ R ] to restart", 330, 260);
 
         }
         if (!b2health_3.ready) {
             context.fillStyle = 'black';
             context.font = "25pt Bowlby One SC";
-            context.fillText("Viiiiicccctorrrryyyyyyy!!!!", 250, 225);
-            context.fillText("R to restart", 350, 300);
+            context.fillText("Epic Win. You da bean!", 260, 200);
+            context.fillText("[ R ] to restart", 330, 260);
         }
     }
 
@@ -527,16 +529,16 @@ function initialize() {
 
     function newGame() {
         gameLoop = setInterval(game, 1);
+        themeMusic.play();
     }
 
     newGame();
-
 }
 
 document.onkeydown = onkeydownhandler;
 
 function onkeydownhandler(e) {
-    if (!gameRunning && e.keyCode == 82) {
+    if (!gameRunning && e.keyCode == 82) {     //R to restart
         initialize();
     }
 }
