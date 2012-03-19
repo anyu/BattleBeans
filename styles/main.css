@@ -1,14 +1,22 @@
+/* ---------------------------------- 
+
+Fonts 
+-Bowlby One SC [game over text]
+-Shadows Into Light Two [controls]
+
+------------------------------------- */
+
 body {
 	min-width: 900px;
 	font-family: 'Bowlby One SC', arial;
 	color: #fff;
 	background-color: #222; 
-	text-align:center; 
+	text-align: center; 
 	padding-top: 20px; 
 }
 
 canvas { 
-	margin-left:auto; 
+	margin-left: auto; 
 	margin-right: auto; 
 	border: 10px solid #333; 
 }
@@ -20,7 +28,7 @@ canvas {
 	margin-left: auto; 
 	margin-right: auto; 
 	border: 10px solid #333; 
-	position:relative;
+	position: relative;
 }
 
 #credits {

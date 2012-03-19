@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!--
+Authors:         Dylan Barth, An Yu, Julie Huynh 
+Game URL:        http://battlebeansgame.com
+Creation Date:   March 2012
+-->
+
 <head>
-	<title>BattleBeans | An Epic HTML5 Game</title>
+	<title>BattleBeans | An Epic HTML5 Canvas Game</title>
 
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
@@ -25,6 +32,7 @@
 </head>
 
 <body>
+	<!--Splashscreen with Menu-->
 	<div id="splashscreen">
 		<img src="images/splashscreen.png" />
 		<div id="splash_buttons">
@@ -33,6 +41,7 @@
 		</div>
 	</div>
 
+	<!--Credits Page-->
 	<div id="credits">
 		<img src="images/credits-page.png" />
 		<a href="#" class="back">
@@ -40,17 +49,18 @@
 		</a>
 	</div>
 
+	<!--Game Canvas & Script-->
 	<canvas id="game" width="900" height="450"></canvas>
-	<script src="js/game-min.js"></script>
+	<script src="js/game.js"></script>
 
 	<div id="controls">
 		[ A ] = Move left &nbsp;&nbsp;&nbsp;&nbsp; 
-			[ D ] = Move right &nbsp;&nbsp;&nbsp;&nbsp; 
-			[ Space ] = Hold and release to shoot &nbsp;&nbsp;&nbsp;&nbsp; 
-			[ Q ] = Quit
+		[ D ] = Move right &nbsp;&nbsp;&nbsp;&nbsp; 
+		[ Space ] = Hold and release to shoot &nbsp;&nbsp;&nbsp;&nbsp; 
+		[ Q ] = Quit
 	</div>
 
-	<!--Sharing-->
+	<!--Sharing Buttons-->
 	<div class="sharing">
 		Share with friends!
 		<br/>
@@ -60,20 +70,19 @@
 		<span class='st_stumbleupon_large' displayText='StumbleUpon'></span>
 		<span class='st_email_large' displayText='Email'></span>
 	</div>
-<!-- Analytics -->
+
+	<!-- Analytics -->
 	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-21447391-8']);
+		_gaq.push(['_trackPageview']);
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-21447391-8']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+		(function() {
+	    	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  	})();
+	</script>
 
 </body>
 </html>
